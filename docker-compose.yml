@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  processor:
+    build: .
+    volumes:
+      - ./data:/app/data
+    environment:
+      - INPUT_FILE=/app/data/input/generated.txt
+      - OUTPUT_FILE=/app/data/output/processed.txt
