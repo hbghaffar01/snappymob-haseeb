@@ -5,16 +5,11 @@ import { RandomGenerator } from './random.generator';
 @Injectable()
 export class GeneratorService {
   private readonly logger = new Logger(GeneratorService.name);
-  private readonly targetSizeBytes = 10 * 1024 * 1024; // 10MB
-  private readonly chunkSize = 5 * 1024 * 1024; // 5MB
+  private readonly targetSizeBytes = 10 * 1024 * 1024;
+  private readonly chunkSize = 5 * 1024 * 1024;
 
   constructor(private readonly randomGenerator: RandomGenerator) {}
 
-  /**
-   * Generates a file containing random objects (alphabetical strings, real numbers,
-   * integers, alphanumerics) separated by commas.
-   * @param outputPath The path where the generated file will be saved.
-   */
   async generateFile(outputPath: string): Promise<void> {
     this.logger.log('Starting file generation...');
     let currentSize = 0;
@@ -30,7 +25,6 @@ export class GeneratorService {
         stream.write(chunk);
         currentSize += Buffer.byteLength(chunk);
 
-        // Log progress every 5MB
         if (currentSize % (5 * 1024 * 1024) === 0) {
           this.logger.debug(
             `Generated ${(currentSize / 1024).toFixed(2)} KB of ${
@@ -47,12 +41,6 @@ export class GeneratorService {
       throw error;
     }
   }
-
-  /**
-   * Generates a chunk of random objects up to the specified target size.
-   * @param targetSize The maximum size of the chunk in bytes.
-   * @returns A string containing random objects separated by commas.
-   */
   private async generateChunk(targetSize: number): Promise<string> {
     const objectTypes = ['string', 'real', 'integer', 'alphanumeric'];
     const chunkParts: string[] = [];
@@ -75,7 +63,6 @@ export class GeneratorService {
         case 'alphanumeric':
           value = this.randomGenerator.generateAlphanumeric();
 
-          // Add random spaces before and after alphanumeric values (up to 10 spaces)
           const spacesBefore = ' '.repeat(Math.floor(Math.random() * 11));
           const spacesAfter = ' '.repeat(Math.floor(Math.random() * 11));
           value = `${spacesBefore}${value}${spacesAfter}`;
